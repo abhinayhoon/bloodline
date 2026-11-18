@@ -1,0 +1,4 @@
+id,orgUsername,hospitalName,bloodGroup,unitsNeeded,status,urgency,createdAt,responders
+REQ-101,ngo_admin,RamSay Hospital - Nainital,O-,3,Open,Critical,2026-10-10,akshat
+REQ-102,ngo_admin,BD Pandey District Hospital,A+,2,Open,Urgent,2026-10-11,akshat
+REQ-103,ngo_admin,Graphic Era Health Center,B+,5,Open,Normal,2026-10-12,abhinaydonor;akshat

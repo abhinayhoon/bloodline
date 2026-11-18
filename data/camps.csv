@@ -1,0 +1,5 @@
+id,name,date,targetUnits,unitsCollected,slotCapacity,status,deferredCount,registeredDonors
+CAMP-001,RamSay Hospital - Nainital,2026-10-18,80,12,160,Open,1,akshat
+CAMP-002,Graphic Era University Campus,2026-10-27,160,0,300,Upcoming,0,samar;akshat
+CAMP-003,CHEA Nainital Headquarters,2026-11-05,60,0,120,Upcoming,0,
+CAMP-004,District Red Cross Society - Almora,2026-08-15,50,50,100,Completed,3,

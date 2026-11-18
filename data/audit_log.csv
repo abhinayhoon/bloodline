@@ -1,0 +1,85 @@
+AUDIT-1,2026-10-13,admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-2,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-3,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-4,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-5,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-6,2026-10-13,akshat,REQUEST_PLEDGE,Pledged to donate for REQ-101
+AUDIT-7,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-8,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-9,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-10,2026-10-13,akshat,REQUEST_PLEDGE,Pledged to donate for REQ-101
+AUDIT-11,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-12,2026-10-13,ngo_admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-13,2026-10-13,ngo_admin,LOGOUT,Session invalidated
+AUDIT-14,2026-10-13,admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-15,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-16,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-17,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-18,2026-10-13,akshat,REQUEST_PLEDGE,Pledged to donate for REQ-101
+AUDIT-19,2026-10-13,ngo_admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-20,2026-10-13,abhinaydonor,USER_REGISTER,Registered account with role: donor
+AUDIT-21,2026-10-13,abhinaydonor,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-22,2026-10-13,abhinaydonor,REQUEST_PLEDGE,Pledged to donate for REQ-103
+AUDIT-23,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-24,2026-10-13,akshat,CAMP_REGISTER,Registered for slot at CAMP-003
+AUDIT-25,2026-10-13,akshat,CAMP_UNREGISTER,Cancelled slot reservation at CAMP-003
+AUDIT-26,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-27,2026-10-13,cityhospital,USER_REGISTER,Registered account with role: ngo
+AUDIT-28,2026-10-13,cityhospital,LOGOUT,Session invalidated
+AUDIT-29,2026-10-13,ramsay,LOGIN_FAILED,Bad credentials
+AUDIT-30,2026-10-13,cityhospital,LOGIN_SUCCESS,Logged in successfully
+AUDIT-31,2026-10-13,cityhospital,LOGOUT,Session invalidated
+AUDIT-32,2026-10-13,admin,LOGIN_FAILED,Bad credentials
+AUDIT-33,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-34,2026-10-13,ngo_admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-35,2026-10-13,ngo_admin,CAMP_EDIT,Edited date/target for CAMP-002
+AUDIT-36,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-37,2026-10-13,akshat,CAMP_REGISTER,Registered for slot at CAMP-003
+AUDIT-38,2026-10-13,akshat,CAMP_UNREGISTER,Cancelled slot reservation at CAMP-003
+AUDIT-39,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-40,2026-10-13,akshat,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-41,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-42,2026-10-13,akshat,CAMP_REGISTER,Registered for slot at CAMP-002
+AUDIT-43,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-44,2026-10-13,hospital01,USER_REGISTER,Registered account with role: ngo
+AUDIT-45,2026-10-13,hospital01,LOGOUT,Session invalidated
+AUDIT-46,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-47,2026-10-13,akshat,LOGIN_FAILED,Bad credentials
+AUDIT-48,2026-10-13,akshat123,USER_REGISTER,Registered account with role: donor
+AUDIT-49,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-50,2026-10-13,akshat,REQUEST_PLEDGE,Pledged to donate for REQ-102
+AUDIT-51,2026-10-13,akshat,REQUEST_PLEDGE,Pledged to donate for REQ-103
+AUDIT-52,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-53,2026-10-13,hospital,LOGIN_FAILED,Bad credentials
+AUDIT-54,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-55,2026-10-13,akshat,CAMP_UNREGISTER,Cancelled slot reservation at CAMP-002
+AUDIT-56,2026-10-13,akshat,CAMP_REGISTER,Registered for slot at CAMP-002
+AUDIT-57,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-58,2026-10-13,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-59,2026-10-13,akshat,LOGOUT,Session invalidated
+AUDIT-60,2026-10-14,akshat,LOGIN_FAILED,Bad credentials
+AUDIT-61,2026-10-14,testdonor,USER_REGISTER,Registered account with role: donor
+AUDIT-62,2026-10-14,testdonor,LOGOUT,Session invalidated
+AUDIT-63,2026-10-14,apolloapolloapolloakshat,LOGIN_FAILED,Bad credentials
+AUDIT-64,2026-10-14,apollo,LOGIN_FAILED,Bad credentials
+AUDIT-65,2026-10-14,akshat,LOGIN_FAILED,Bad credentials
+AUDIT-66,2026-10-14,apollo,USER_REGISTER,Registered account with role: ngo
+AUDIT-67,2026-10-14,apollo,LOGOUT,Session invalidated
+AUDIT-68,2026-10-14,ngo1,USER_REGISTER,Registered account with role: ngo
+AUDIT-69,2026-11-16,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-70,2026-11-16,akshat,LOGOUT,Session invalidated
+AUDIT-71,2026-11-16,abhinaydonor02,USER_REGISTER,Registered account with role: donor
+AUDIT-72,2026-11-16,abhinaydonor02,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-73,2026-11-17,ngo_admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-74,2026-11-17,ngo_admin,LOGOUT,Session invalidated
+AUDIT-75,2026-11-17,akshat,LOGIN_SUCCESS,Logged in successfully
+AUDIT-76,2026-11-17,akshat,LOGOUT,Session invalidated
+AUDIT-77,2026-11-17,admin,LOGIN_SUCCESS,Logged in successfully
+AUDIT-78,2026-11-17,admin,LOGOUT,Session invalidated
+AUDIT-79,2026-11-17,abhinayhai,USER_REGISTER,Registered account with role: donor
+AUDIT-80,2026-11-17,abhinayhai,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-81,2026-11-17,abhinayhai,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-82,2026-11-17,abhinayhoon,USER_REGISTER,Registered account with role: donor
+AUDIT-83,2026-11-17,abhinayhoon,DONOR_PROFILE_SAVE,Saved medical details
+AUDIT-84,2026-11-17,abhinayhoon,LOGOUT,Session invalidated
+AUDIT-85,2026-11-17,abhinayhoon,LOGIN_SUCCESS,Logged in successfully

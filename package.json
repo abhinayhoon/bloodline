@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "loading-dev": "^0.3.5"
+  },
+  "name": "bloodline",
+  "private": true,
+  "scripts": {
+    "start": "python3 scripts/local-service.py start",
+    "stop": "python3 scripts/local-service.py stop",
+    "restart": "python3 scripts/local-service.py restart",
+    "status": "python3 scripts/local-service.py status",
+    "dev": "./build/bloodline_server data frontend 8080",
+    "build": "cmake -B build -S . && cmake --build build -j 4",
+    "test": "ctest --test-dir build --output-on-failure",
+    "test:flows": "python3 tests/test_workflows.py"
+  }
+}

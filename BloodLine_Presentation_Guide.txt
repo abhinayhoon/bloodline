@@ -1,0 +1,404 @@
+BLOODLINE
+OOP PROJECT-BASED LEARNING PRESENTATION GUIDE
+
+This guide follows the Phase 2 and Phase 3 checkpoints shown in the evaluation sheet. It explains what the project does, where to point in the code, and what you can say during your presentation.
+
+======================================================================
+1. PROJECT OVERVIEW
+======================================================================
+
+BloodLine is a blood donation camp management system. It models donors, hospitals and NGOs, administrators, donation camps, donations, blood units, and requests for blood.
+
+The backend is written in C++17. It provides HTTP REST API endpoints and returns JSON. The browser frontend uses JavaScript and CSS. Project data is persisted in CSV files under the data folder.
+
+Basic flow:
+
+Browser -> HTTP request -> C++ server route -> domain objects and business rules -> CSV repository -> JSON response -> browser display
+
+Example: when a donor checks eligibility, the browser sends a request to the server. The server identifies the logged-in user, gets the donor information, applies the relevant checks, and sends the result to the browser.
+
+Important project locations:
+
+- backend/src/main.cpp: application state, HTTP routes, authentication helpers, and server startup.
+- backend/include/bloodline/: C++ domain classes, interfaces, rules, repositories, and services.
+- backend/tests/test_bloodline.cpp: automated tests for important behavior.
+- data/: CSV records and log files.
+- frontend/script.js: browser interactions and API calls.
+- frontend/style.css: user interface styling.
+- frontend/live-blood-bg.js: visual background effect.
+- CMakeLists.txt: C++ build and test configuration.
+- README.md: project instructions, demo information, and API overview.
+
+======================================================================
+2. PHASE 2: IMPLEMENTATION AND ANALYSIS
+======================================================================
+
+CHECKPOINT 1: CLASSES, OBJECTS, AND CONSTRUCTORS IMPLEMENTED IN C++
+
+A class is a blueprint that describes data and behavior. An object is one actual instance created from that blueprint.
+
+For example:
+- Donor is a class.
+- A donor profile for a particular user is an object of Donor.
+- Camp is a class.
+- A particular donation camp is an object of Camp.
+
+Important classes:
+
+Account: common account information and virtual account behavior.
+Donor: donor profile, consent, donation history, and eligibility-related calculations.
+Organization: organization account information and approval status.
+Hospital and NGO: specialized organization types.
+Camp: camp date, capacity, registrations, collected units, and status.
+Donation: one donation record.
+BloodUnit: one blood stock unit and its expiry calculation.
+Request: common blood-request behavior.
+UrgentRequest and RoutineRequest: specialized request types.
+Credential: password salt/hash data and password verification.
+CompatibilityTable: blood-group donation compatibility.
+SessionManager: login session token creation and validation.
+
+A constructor is a special member function called when an object is created. It initializes the object. For example, the Camp constructor receives values such as the camp ID, name, date, and target units. The Donor constructor initializes the account information inherited from Account.
+
+What to say:
+"I modeled the important real-world parts of the system as C++ classes. A class is the blueprint, and an object is one instance of it. Constructors initialize objects with starting data; for example, the Camp constructor receives its identifier, name, date, and target."
+
+CHECKPOINT 2: ENCAPSULATION, INHERITANCE, AND POLYMORPHISM APPLIED
+
+A. Encapsulation
+
+Encapsulation means keeping an object's data and related rules together, and controlling how that data is accessed or changed.
+
+In Donor.hpp, profile details are private. Public methods such as setAge(), setWeight(), grantConsent(), revokeConsent(), maskedPhone(), and isEligibleOnDate() provide controlled operations.
+
+In Camp.hpp, methods control registration and camp status. registerDonor() prevents duplicate registrations and rejects a registration if the camp has no remaining slots. setStatus() rejects certain invalid status changes.
+
+In BloodUnit.hpp, the class calculates an expiry date and days remaining rather than placing that calculation in every server route.
+
+In Credential.hpp, the salt and hash are private, and password checks are performed through verify().
+
+Why it is useful: calling code cannot freely bypass the class rules. The class that owns the data also owns the checks that protect it.
+
+What to say:
+"I used encapsulation to protect data and keep the rules near the data they control. For example, Camp controls capacity and registration, and Donor provides methods for donor-related information and calculations."
+
+B. Inheritance
+
+Inheritance allows a specialized class to reuse and extend a more general class.
+
+The account hierarchy is:
+
+Account
+|-- Donor
+|-- Admin
+|-- Organization
+    |-- Hospital
+    |-- NGO
+
+Donor, Admin, and Organization inherit shared account features from Account. Hospital and NGO inherit organization features from Organization. This is multilevel inheritance for Hospital and NGO.
+
+The request hierarchy is:
+
+Request
+|-- UrgentRequest
+|-- RoutineRequest
+
+The base Request contains shared request information. The derived types provide different urgency and priority behavior.
+
+What to say:
+"I used inheritance where one type is a specialized form of another. A Donor is an Account, and a Hospital is an Organization. This reuses common data and behavior while allowing specialized classes to add their own behavior."
+
+C. Polymorphism
+
+Polymorphism means one common operation can have different behavior depending on the actual object.
+
+Account declares virtual functions such as role(), dashboardKind(), displayName(), and toJson(). Different account types implement those functions for their own type.
+
+Request declares virtual functions urgency() and priorityScore(). UrgentRequest and RoutineRequest implement them differently. RequestPrioritizer sorts requests by calling priorityScore() through the common request interface.
+
+The matching engine also uses a common IMatchingRule interface. Each concrete rule implements evaluate() with its own matching decision.
+
+Compile-time examples include overloaded Donation::record() functions, stream output for BloodGroup, and templates such as paginate<T>().
+
+What to say:
+"I used runtime polymorphism through virtual functions. For example, both urgent and routine requests have priorityScore(), but the result depends on the actual request type. The prioritizer can use the common Request interface."
+
+CHECKPOINT 3: MEMBER FUNCTIONS AND REQUIRED MODULES IMPLEMENTED
+
+A member function belongs to a class and operates on that class's data.
+
+Examples:
+- Donor::isEligibleOnDate() checks a donor's waiting period.
+- Donor::maskedPhone() returns a masked phone string.
+- Camp::registerDonor() checks and records a camp registration.
+- Camp::setStatus() validates a status update.
+- BloodUnit::isExpired() checks whether the unit has passed its expiry date.
+- Request::addResponder() records a donor response, avoiding duplicate responders.
+- Credential::verify() checks a proposed password.
+- AccountFactory::createAccount() creates an account subtype based on role.
+
+The code is divided by responsibility:
+- Domain classes contain data and business rules.
+- EligibilityRules.hpp contains configurable age, weight, and hemoglobin checks.
+- MatchingEngine.hpp combines matching rules.
+- FileRepository.hpp contains CSV persistence and generic pagination helpers.
+- SessionManager.hpp manages sessions.
+- Errors.hpp contains application errors and the rate limiter.
+- main.cpp sets up routes and connects the browser to the domain logic.
+
+AppState in backend/src/main.cpp holds the major repositories and services used by the running server.
+
+What to say:
+"I split the program into modules with clear responsibilities. Domain classes represent the problem, repositories load and save data, services handle tasks such as matching and notifications, and the server routes connect these parts to the browser."
+
+CHECKPOINT 4: C++ INPUT/OUTPUT AND DATA STRUCTURES HANDLED
+
+The browser sends HTTP requests to the server. The server reads JSON request bodies and returns JSON responses. Repositories read and write CSV files. The server also uses console output for startup messages and error output.
+
+Data structures used:
+- std::vector: collections of donors, camps, donations, requests, and registrations.
+- std::unique_ptr: ownership of polymorphic Account and Request objects.
+- std::optional: represents a value that may be absent, such as a donor blood group.
+- std::array: fixed-size blood compatibility matrix.
+- std::map: groups completed donation statistics by donor username.
+- std::unordered_map: session and rate-limit lookup.
+- std::string: names, identifiers, dates, roles, and messages.
+- enum class: fixed choices such as blood groups, camp statuses, and request statuses.
+
+The CompatibilityTable stores an 8 by 8 matrix. The matrix answers whether a donor blood group can donate to a recipient blood group according to the program's coded rules.
+
+What to say:
+"Input comes from HTTP requests and is parsed as JSON. The server returns JSON and repositories persist information in CSV files. I used vectors for collections, smart pointers for polymorphic objects, optional for values that may be missing, and an array for the fixed compatibility matrix."
+
+CHECKPOINT 5: TESTING, DEBUGGING, CODE STRUCTURE, AND DOCUMENTATION
+
+Tests are in backend/tests/test_bloodline.cpp. They cover:
+- Blood group parsing and invalid input.
+- Credential verification behavior.
+- Blood group compatibility.
+- Male and female waiting-period boundaries.
+- Phone masking and donor milestone badges.
+- Blood-unit expiry.
+- Camp status transitions, capacity, and duplicate registration.
+- Donor matching.
+- Request priority ordering.
+- Rate limiting after repeated failures.
+- AccountFactory creating the correct account types.
+- Donation status behavior.
+
+Boundary tests are especially useful. A waiting-period test checks both the day before eligibility and the exact day eligibility begins. This helps detect off-by-one errors.
+
+Errors.hpp defines application errors. Examples represent bad requests, unauthorized access, forbidden access, missing records, conflicts, and too many requests. The server maps application errors to HTTP status codes and returns a JSON error.
+
+CMakeLists.txt configures the C++17 build, server executable, test executable, and CTest test registration.
+
+What to say:
+"I tested normal cases and invalid cases. For example, the tests check waiting-period boundaries, invalid camp operations, and donor matching. Custom errors let the server return meaningful HTTP error responses instead of silently accepting invalid operations."
+
+======================================================================
+3. PHASE 3: EVALUATION AND OUTCOME
+======================================================================
+
+CHECKPOINT 1: MAJOR C++ FEATURES IMPLEMENTED AND PROJECT RUNS
+
+Major features represented in the implementation:
+- Donor, organization, and administrator accounts.
+- Donor profiles and eligibility checks.
+- Blood-group compatibility.
+- Camp management and slot registration.
+- Donation records and blood requests.
+- Donor matching against configured rules.
+- CSV persistence.
+- Session-based authentication and role checks.
+- Audit and notification logging.
+- Browser UI calling the C++ REST API.
+
+Typical demo flow:
+1. Open the application in a browser.
+2. Log in as a donor and show the donor view.
+3. Show donor profile or eligibility information.
+4. Show compatible requests or camp registration.
+5. Explain that the server applies the domain rules and repositories save data.
+6. If available, show the organization or administrator view.
+
+Before the presentation, verify the build, server startup, browser page, and demo accounts on the presentation machine. Do not claim a live demo works until you have personally run it there.
+
+Build and run commands from the project README:
+
+cmake -B build -S .
+cmake --build build
+./build/bloodline_tests
+./build/bloodline_server data frontend 8080
+
+Then open http://localhost:8080 if the frontend is served correctly by the configured server.
+
+What to say:
+"The main features are connected through the C++ server and browser. A user action reaches an API route, the route calls the appropriate class or repository, and the result is returned to the browser."
+
+CHECKPOINT 2: TEST CASES, OUTPUTS, AND ERROR HANDLING DEMONSTRATED
+
+Show at least one successful test and one rejected operation.
+
+Good examples:
+- Invalid blood group input is rejected.
+- A donor is ineligible one day before the waiting period ends and eligible on the boundary date.
+- A camp rejects a duplicate registration.
+- A camp rejects a registration when it is full.
+- The matching test excludes a donor who fails consent, eligibility, or compatibility.
+- A request-priority test places critical requests before routine requests.
+
+What to say:
+"I demonstrate both successful and rejected behavior. For example, the camp tests check duplicate registration and full capacity, while the waiting-period tests check dates immediately before and at the eligibility boundary."
+
+CHECKPOINT 3: C++ CONCEPTS, CODE QUALITY, AND MODULARITY EXPLAINED
+
+Relevant C++ concepts:
+- Classes and constructors model real-world entities.
+- Private data and member functions provide encapsulation.
+- Inheritance shares and specializes behavior.
+- Virtual functions provide runtime polymorphism.
+- Templates support reusable code such as pagination.
+- unique_ptr expresses object ownership, especially for polymorphic objects.
+- optional represents a value that might not exist.
+- enum class represents a limited set of valid categories.
+- Exceptions represent invalid operations and application errors.
+- CMake configures the build and tests.
+
+Modularity:
+- The code is separated into domain models, rules, repositories, services, routes, and tests.
+- Many rules are implemented in classes rather than repeated in route handlers.
+- Interfaces provide common contracts for different implementations.
+
+What to say:
+"The code is modular because responsibilities are separated. The domain classes implement business behavior, the repositories handle persistence, and the HTTP server handles communication. Templates and interfaces help reuse behavior."
+
+CHECKPOINT 4: FINAL SOURCE CODE AND DOCUMENTATION SUBMITTED
+
+Point out these items in the project:
+- backend/include/bloodline/: C++ headers and domain classes.
+- backend/src/main.cpp: server and API routes.
+- backend/tests/test_bloodline.cpp: automated tests.
+- frontend/: browser scripts and styles.
+- data/: CSV data and logs.
+- CMakeLists.txt: build and testing configuration.
+- README.md: project and run documentation.
+
+What to say:
+"The submission contains the source code, build configuration, tests, frontend assets, data files, and README. The organization makes it possible to inspect the domain classes, API routes, persistence code, and tests separately."
+
+CHECKPOINT 5: TEAM CONTRIBUTION CLEAR
+
+Use only a truthful account of your own contribution. Do not claim work done by someone else.
+
+Fill in this template:
+"I contributed to [my actual area]. I implemented or helped with [specific classes, files, or features]. I tested [specific behaviors]. I coordinated with the team by [actual collaboration]."
+
+Example only if accurate:
+"I worked on the donor and camp functionality. I helped implement donor-related checks and camp registration rules, then tested the relevant cases."
+
+======================================================================
+4. OOP CONCEPT MAP FOR QUICK REVISION
+======================================================================
+
+ENCAPSULATION:
+Donor, Camp, BloodUnit, and Credential keep data and related operations together.
+
+ABSTRACTION:
+Account, IEligibilityRule, IMatchingRule, INotificationService, and IRepository provide interfaces or common contracts.
+
+INHERITANCE:
+Donor and Admin inherit from Account. Hospital and NGO inherit from Organization, which inherits from Account. UrgentRequest and RoutineRequest inherit from Request.
+
+RUNTIME POLYMORPHISM:
+Virtual functions such as role(), dashboardKind(), priorityScore(), and evaluate() behave according to the concrete object.
+
+COMPILE-TIME POLYMORPHISM:
+Function overloading, operator overloading, and templates.
+
+STRATEGY PATTERN:
+DonorMatchingEngine uses pluggable IMatchingRule implementations such as compatibility, eligibility, and consent rules.
+
+FACTORY PATTERN:
+AccountFactory creates an account subtype based on a role string.
+
+REPOSITORY PATTERN:
+Repository classes separate data loading and saving from the rest of the application. Some repositories implement IRepository<T>; account and request repositories are concrete classes.
+
+======================================================================
+5. LIKELY TEACHER QUESTIONS AND SIMPLE ANSWERS
+======================================================================
+
+Q: What is the difference between a class and an object?
+A: A class is a blueprint. An object is one instance created from that blueprint. Donor is a class; one particular donor profile is an object.
+
+Q: What is the difference between abstraction and encapsulation?
+A: Abstraction hides implementation details and exposes the operations other code needs. Encapsulation protects data and controls how it can be changed.
+
+Q: Why is Account abstract?
+A: Account describes common account information and required behavior, but the system uses specific types such as Donor, Admin, or Organization. Its pure virtual functions require derived types to supply their role-specific behavior.
+
+Q: Where is runtime polymorphism used?
+A: It is used when calling virtual functions through base-class or interface types. For example, priorityScore() behaves differently for UrgentRequest and RoutineRequest.
+
+Q: Why use a factory?
+A: AccountFactory centralizes account creation. The caller requests a role, and the factory creates the corresponding concrete account type.
+
+Q: Why use CSV instead of a database?
+A: CSV is simple for a coursework prototype and avoids database setup. A production version could replace the storage implementation with a database.
+
+Q: What does the matching engine do?
+A: It checks donors against a sequence of matching rules, including compatibility, eligibility, and consent, and returns donors who pass the configured rules.
+
+Q: What does the test suite verify?
+A: It checks software behavior such as parsing, compatibility, waiting-period boundaries, expiry, camp limits, matching, prioritization, and factory creation.
+
+Q: Does passing tests prove the system is medically safe?
+A: No. Tests show that the code follows the tested assumptions. Medical rules must be verified by qualified experts and current regional standards before real use.
+
+======================================================================
+6. IMPORTANT LIMITATIONS: BE ACCURATE
+======================================================================
+
+1. Credential hashing is not production-grade. Credential.hpp uses std::hash with a salt and repeated operations, and the source warns that it is not cryptographically strong. Do not call it SHA-256 or production-secure.
+
+2. SessionManager.hpp sets a one-hour session lifetime. If another document says 24 hours, the implementation currently says one hour.
+
+3. LocationRule in MatchingEngine.hpp currently returns true rather than comparing actual donor and hospital locations. Do not claim actual proximity matching is implemented.
+
+4. Medical waiting periods, eligibility thresholds, and shelf-life values are configured educational assumptions. They are not medical advice and need expert and regulatory verification before any real-world use.
+
+5. Documentation and implementation may differ. When asked what the running code does, explain the implementation rather than an inconsistent README claim.
+
+6. Verify the frontend file and server startup before promising a live browser demonstration. The server mounts the configured frontend folder, so the necessary HTML entry page must be present in the environment used for the demo.
+
+7. This is an educational prototype, not a production healthcare system. A real system would require stronger security, expert-verified medical rules, robust persistence, privacy review, and operational safeguards.
+
+======================================================================
+7. READY-TO-SAY PRESENTATION SCRIPT
+======================================================================
+
+"Good morning. My project is BloodLine, a blood donation camp management system. It is designed to help donors, hospitals and NGOs, and administrators coordinate blood donation activities.
+
+"The backend is written in C++17 and exposes a REST API. The browser communicates with it using HTTP and JSON. The project saves its records using CSV files.
+
+"I modeled the system using classes such as Account, Donor, Organization, Camp, Donation, BloodUnit, and Request. Constructors initialize these objects with their starting information.
+
+"I used encapsulation to keep data and its rules together. For example, Camp controls its registration capacity and valid status changes. Donor contains donor-related data and eligibility calculations.
+
+"I used inheritance to reuse and specialize features. Donor and Admin inherit from Account. Hospital and NGO inherit from Organization. UrgentRequest and RoutineRequest inherit from Request.
+
+"I used polymorphism through virtual functions. For example, urgent and routine requests provide different priority scores, and the request prioritizer works through the common Request type.
+
+"I also used interfaces for eligibility rules, matching rules, notifications, and repositories. The matching engine applies configurable rules to find suitable donors. AccountFactory creates the correct account subtype.
+
+"I tested important cases, including blood compatibility, waiting-period boundaries, camp capacity, matching, and request prioritization. The tests verify software behavior against the project's configured assumptions; they do not prove medical suitability.
+
+"This is an educational prototype. Its medical assumptions and security mechanisms would need expert review and stronger implementations before any real healthcare use.
+
+"The main learning outcome was applying object-oriented programming to model a real problem: classes represent entities, member functions enforce their rules, and interfaces and polymorphism help different modules work together. Thank you."
+
+======================================================================
+8. SHORT CLOSING LINE
+======================================================================
+
+"BloodLine demonstrates how object-oriented programming can organize a practical system: classes model real-world entities, encapsulation protects their rules, inheritance reuses common behavior, and polymorphism lets different types work through shared interfaces."

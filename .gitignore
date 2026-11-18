@@ -1,0 +1,36 @@
+# Operating System files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+
+# Build artifacts & binaries
+build/
+bin/
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+/bloodline
+bloodline_server
+bloodline_tests
+
+# Node & package dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime and local logs
+.runtime/
+.cache/
+*.log
+!data/notifications.log
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
